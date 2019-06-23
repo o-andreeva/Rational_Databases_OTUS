@@ -1,0 +1,611 @@
+<html><head><style>TD,TH{padding:3px;border:1px solid #000;}TH{text-align: left; border: 1px solid #000;}</style></head><body><h1 id="d1_doc_gen_contents">Contents</h1>
+
+<ul><li><a href="#distributor"><b>distributor</b></a></li>
+<li><a href="#manufacturer"><b>manufacturer</b></a></li>
+<li><a href="#product"><b>product</b></a></li>
+<li><a href="#distributor_contact"><b>distributor_contact</b></a></li>
+<li><a href="#supply"><b>supply</b></a></li>
+<li><a href="#client"><b>client</b></a></li>
+<li><a href="#items_in_order"><b>items_in_order</b></a></li>
+<li><a href="#order"><b>order</b></a></li>
+<li><a href="#responsible_courier"><b>responsible_courier</b></a></li>
+<li><a href="#review"><b>review</b></a></li>
+<li><a href="#attribute"><b>attribute</b></a></li>
+<li><a href="#product_types_minimal"><b>product_types_minimal</b></a></li>
+<li><a href="#attribute_value"><b>attribute_value</b></a></li>
+<li><a href="#product_type_attributes_list"><b>product_type_attributes_list</b></a></li>
+<li><a href="#products_in_supply_order"><b>products_in_supply_order</b></a></li>
+<li><a href="#attributes_check"><b>attributes_check</b></a></li>
+<li><a href="#product_promotion"><b>product_promotion</b></a></li>
+<li><a href="#price_change"><b>price_change</b></a></li>
+<li><a href="#product_types_hierarchy"><b>product_types_hierarchy</b></a></li>
+</ul><h1>Tables</h1>
+
+<h2 id="distributor"> Table: <code>distributor</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица со всеми доступными поставщиками, котого сотрудники выбирают с учетом минимального размера заказа, min-max времени поставки и цен на продукцию. 
+
+Ограничения:
+больше нуля - min_order_money, min_supply_days, max_supply_days  
+
+NOT NULL все поля кроме, сайта поставщика, так как его может не быть. 
+
+Индекс по dist_name, так как по нему будут часто искать для заказа на поставку.  </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_distributor</code></td><td>MEDIUMINT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>достаточно MEDIUMINT UNSIGNED больше 16 777 215 точно не будет</td></tr>
+<tr><td><code>distributor_name</code></td><td>VARCHAR(80)</td><td>NOT NULL</td><td> </td><td>Название поставщика - 80 символов с лихвой</td></tr>
+<tr><td><code>general_address</code></td><td>VARCHAR(100)</td><td>NOT NULL</td><td> </td><td>На адрес 100 символов на случай длиного адреса, наличия заметок в адресе а-ля " с 500 метрах от озера", которые надо чистить.</td></tr>
+<tr><td><code>general_phone</code></td><td>VARCHAR(15)</td><td>NOT NULL</td><td> </td><td>Максимальная длина телефона - "It is an open numbering plan, however, imposing a maximum length of 15 digits to telephone numbers."<br />Предполагается хранение одного телефонного номера. Остальные в книге контактов.</td></tr>
+<tr><td><code>min_order_money</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td>Минимальна сумма возможной поставки, она не будет превышать 16777215 руб</td></tr>
+<tr><td><code>min_supply_days</code></td><td>TINYINT</td><td>NOT NULL</td><td> </td><td>Минимальное кол-во дней, за которые поставщик осуществит поставку</td></tr>
+<tr><td><code>max_supply_days</code></td><td>TINYINT</td><td>NOT NULL</td><td> </td><td>Сколько дней может максимально занять поставка. Она не будет превышать 255 дней</td></tr>
+<tr><td><code>site</code></td><td>VARCHAR(80)</td><td></td><td> </td><td>Сайт поставщика - 80 символов достаточно, Может быть NULL, так как могут быть поставщики без сайта<br /></td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_distributor</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>idDistributor_UNIQUE</td><td><code>id_distributor</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="manufacturer"> Table: <code>manufacturer</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица со всеми производителями. 
+Предполагается, что все поля таблицы будут уникальными, кроме country_of_origin. Индексы не нужны, так как в базе данных вряд ли будет часто  осуществляться поиск данной информации и таблица будет небольшой относительно др таблиц (это справочник). 
+
+NOT NULL name</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_manufacturer</code></td><td>MEDIUMINT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>достаточно MEDIUMINT UNSIGNED больше 16 777 215 точно не будет<br /></td></tr>
+<tr><td><code>manufacturer_name</code></td><td>VARCHAR(45)</td><td>NOT NULL, UNIQUE</td><td> </td><td>Именование производителя не будет более 45 символов</td></tr>
+<tr><td><code>site</code></td><td>VARCHAR(80)</td><td>NOT NULL</td><td><code>'Not Assigned'</code></td><td>Сайт проиводителя - не более 80 символов<br /></td></tr>
+<tr><td><code>country_of_origin</code></td><td>VARCHAR(35)</td><td>NOT NULL</td><td> </td><td>Название Страны производителя. Самое длинное "Центрально-африканская республика"<br /></td></tr>
+<tr><td><code>discription</code></td><td>VARCHAR(1000)</td><td></td><td> </td><td>описание производителя, его история</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_manufacturer</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>manufacturer_name_UNIQUE</td><td><code>manufacturer_name</code></td><td>UNIQUE</td><td> </td></tr>
+<tr><td>idManufacturer_UNIQUE</td><td><code>id_manufacturer</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="product"> Table: <code>product</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица содержащая все продукты которыми тогрует/торговала компания. 
+Ограничения:
+Должно быть ограничение цена не может быть больше нуля. Остаток тоже не может быть нуля, если ноль, клиент не сможет сделать заказ. 
+
+NOT NULL manufacturer_id, product_type_id, price, rest_quantity
+
+Индекс по названию продукта (name) для ускорения поиска на сайте.
+Можно сделать индекс по остатку, но так как это поле будет часто обновляться при любом заказе/поставке, то это скорее, будет тормозить систему
+</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_product</code></td><td>MEDIUMINT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>достаточно MEDIUMINT UNSIGNED больше 16 777 215 точно не будет</td></tr>
+<tr><td><code>name</code></td><td>VARCHAR(100)</td><td>NOT NULL</td><td> </td><td>Взято с запасом, т. к. название может быть длинным "Плазменный телевизор Samsung SQGSxxxxx34 с выгнутым экраном"</td></tr>
+<tr><td><code>current_price</code></td><td>DECIMAL</td><td>NOT NULL</td><td> </td><td>Макс стоимость за единицу продукта - 1 000 000 плюс копейки - два знака после запятой</td></tr>
+<tr><td><code>current_promo</code></td><td>DECIMAL</td><td>NOT NULL</td><td><code>0</code></td><td> </td></tr>
+<tr><td><code>created_at</code></td><td>TIMESTAMP(13)</td><td>NOT NULL</td><td> </td><td>дата появления продукта в базе</td></tr>
+<tr><td><code>rest_quantity</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td>Имеющийся остаток продукта на данный момент времени (поставки минус заказы)</td></tr>
+<tr><td><code>manufacturer_id</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_manufacturer</code> in table <a href="#manufacturer"><code>manufacturer</code></a>.</td></tr>
+<tr><td><code>product_type_id</code></td><td>SMALLINT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product_types</code> in table <a href="#product_types_minimal"><code>product_types_minimal</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>id_manufact</td><td><code>manufacturer_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>Product_Type_idx</td><td><code>product_type_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>PRIMARY</td><td><code>id_product</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>idProduct_UNIQUE</td><td><code>id_product</code></td><td>UNIQUE</td><td> </td></tr>
+<tr><td>product_name</td><td><code>name</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="distributor_contact"> Table: <code>distributor_contact</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица с контактами дистрибьютера для осуществления заказа и переговоров о скидке на продукцию, поздравительных e-mail рассылок. 
+Запросы к ней будут редки, это справочник - индексы не нужны. 
+
+NOT NULL все поля</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_distributor_contacts</code></td><td>MEDIUMINT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>Кол-во контактов не будет превышать 16777215</td></tr>
+<tr><td><code>employee_first_name</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td> </td><td>Достаточно для хранения имени</td></tr>
+<tr><td><code>employee_last_name</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td> </td><td>Достаточно хранения фамилии</td></tr>
+<tr><td><code>working_phone_number</code></td><td>VARCHAR(15)</td><td>NOT NULL</td><td> </td><td>Максимальная длина телефона - "It is an open numbering plan, however, imposing a maximum length of 15 digits to telephone numbers."</td></tr>
+<tr><td><code>e-mail</code></td><td>VARCHAR(320)</td><td>NOT NULL</td><td> </td><td>Технический максимум для храниения email</td></tr>
+<tr><td><code>position</code></td><td>VARCHAR(60)</td><td>NOT NULL</td><td> </td><td>Названия позиции может быть очень длинным, взято с запасом.</td></tr>
+<tr><td><code>gender</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>ENUM("Мужской", "Женский", "Не указано")</td></tr>
+<tr><td><code>id_distributor</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_distributor</code> in table <a href="#distributor"><code>distributor</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_distributor_contacts</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>dist_id</td><td><code>id_distributor</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idDistributor_Contacts_UNIQUE</td><td><code>id_distributor_contacts</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="supply"> Table: <code>supply</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица содержащая все поставки. 
+
+NOT NULL start_date_time, status, 
+end_time может быть NULL, так как поставка в пути/отменена. 
+
+Индекс не нужен
+</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_supply</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>Поставок может быть очень много - оставляем INT</td></tr>
+<tr><td><code>supply_start_date_time</code></td><td>TIMESTAMP(14)</td><td>NOT NULL</td><td> </td><td>Все заказы на текщее время - TIMESTAMP достаточно</td></tr>
+<tr><td><code>supply_end_date_time</code></td><td>TIMESTAMP(14)</td><td></td><td> </td><td>Все заказы на текщее время - TIMESTAMP достаточно</td></tr>
+<tr><td><code>supply_status</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>Статус поставки - состоялась ли поставка? Когда мы захотим узнать сколько у нас продукции на складе, нам нужно учитывать выполненные поставки.<br />ENUM("Отмена", "Заказано", "Доставлено")</td></tr>
+<tr><td><code>dist_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_distributor</code> in table <a href="#distributor"><code>distributor</code></a>.</td></tr>
+<tr><td><code> responsible_employee_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> </td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_supply</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>dist_idx</td><td><code>dist_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idsupply_UNIQUE</td><td><code>id_supply</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="client"> Table: <code>client</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица  со всеми клиентами интернет-магазина. 
+
+Композитный индекс на фамилию и имя клиента, чтобы можно было быстро найти информацию по клиенту. Фамилия более кардинальная. поэтому она первая в индексе. 
+
+NOT NULL - имя, фамилия e-mail, телефон, дата_регистрации
+Остальной информации клиент может не предоставить.  </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_clients</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td> </td></tr>
+<tr><td><code>first_name</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td> </td><td>Достаточно для хранения имени</td></tr>
+<tr><td><code>last name</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td> </td><td>Достаточно для хранения фамилии<br /></td></tr>
+<tr><td><code>email</code></td><td>VARCHAR(320)</td><td>NOT NULL</td><td> </td><td>З20 технический максимум</td></tr>
+<tr><td><code>password</code></td><td>VARCHAR(45)</td><td>NOT NULL</td><td> </td><td> </td></tr>
+<tr><td><code>phone</code></td><td>VARCHAR(15)</td><td>NOT NULL</td><td> </td><td>Максимальная длина телефона - "It is an open numbering plan, however, imposing a maximum length of 15 digits to telephone numbers."</td></tr>
+<tr><td><code>phone_2</code></td><td>VARCHAR(15)</td><td></td><td> </td><td>может не быть второго телефона</td></tr>
+<tr><td><code>address</code></td><td>VARCHAR(100)</td><td></td><td> </td><td>100 символов на адрес клиента. Допускаеи NULL, так как клиент может заказать самовывоз</td></tr>
+<tr><td><code>registration_date</code></td><td>DATE</td><td>NOT NULL</td><td> </td><td>Дата регистрации, время лишняя информация</td></tr>
+<tr><td><code>gender</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>ENUM("Мужской", "Женский", "Не указано")</td></tr>
+<tr><td><code>first_order_date_time</code></td><td>TIMESTAMP(14)</td><td></td><td> </td><td>Дата и время первого заказа</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_clients</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>last_first_client_name</td><td><code>last name</code>, <code>first_name</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idСlients_UNIQUE</td><td><code>id_clients</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="items_in_order"> Table: <code>items_in_order</code></h2>
+
+<h3>Description:</h3>
+
+<p>Корзины из которых формируются заказы клиентов. 
+
+Ограничения:
+Количество больше нуля.  
+
+NOT NULL Все поля </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>quantity</code></td><td>TINYINT</td><td>NOT NULL</td><td> </td><td>никто не будет делать заказ на более чем 255 продуктов единовременно</td></tr>
+<tr><td><code>price</code></td><td>DECIMAL</td><td>NOT NULL</td><td> </td><td> </td></tr>
+<tr><td><code>promo_percentage</code></td><td>DECIMAL</td><td>NOT NULL</td><td><code>0</code></td><td> </td></tr>
+<tr><td><code>order_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_order</code> in table <a href="#order"><code>order</code></a>.</td></tr>
+<tr><td><code>product_id</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product</code> in table <a href="#product"><code>product</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>order_idx</td><td><code>order_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>product_idx</td><td><code>product_id</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="order"> Table: <code>order</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица со всеми заказами. Из неё можно узнать как доставляются заказы, какие заказы оплачены, такой курьер отвечает за заказ, если это не самовывоз. 
+
+NOT NULL все кроме
+адреса доставки,  id курьера (т.к. самовывоз), 
+времени, кода заказ был получен клиентом. 
+
+Индексы не нужны, большинство полей низкардинальные.
+Единственный кандидат на индексацию время заказа. 
+</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_order</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>заказов может быть очень много - оставляем INT</td></tr>
+<tr><td><code>date_time</code></td><td>TIMESTAMP(14)</td><td>NOT NULL</td><td> </td><td>Возможностей TIMESTAMP достаточно, а занимает меньше.<br /></td></tr>
+<tr><td><code>order_payment_status</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>Оплачен ли был заказ. ENUM("Ожидается Оплата", "Оплачено", "Отмена")</td></tr>
+<tr><td><code>delivery_type</code></td><td>TINYINT</td><td>NOT NULL</td><td> </td><td>Логический тип - самовывоз или доставка</td></tr>
+<tr><td><code>order_delivery_status</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>Статус доставки: все продукты кроме типа "Отмена", считаются проданными и как бы проданными, они вычитаются из остатка по продукту ( Products.rest_quantity ) .  ENUM("Отмена", "В процессе сбора", "Доставляется", "Доставлено")</td></tr>
+<tr><td><code>delivery_address</code></td><td>VARCHAR(100)</td><td></td><td> </td><td>Адрес доставки, если надо доставить по аресу, отличающемуся от указанного при регистрации клиента.</td></tr>
+<tr><td><code>delivered_date_time</code></td><td>TIMESTAMP(14)</td><td></td><td> </td><td>Дата/время получения заказа. Возможностей TIMESTAMP достаточно, а занимает меньше.</td></tr>
+<tr><td><code>client_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_clients</code> in table <a href="#client"><code>client</code></a>.</td></tr>
+<tr><td><code>responsible_courier_id</code></td><td>INT</td><td></td><td> </td><td> FK in column <code>id_courier</code> in table <a href="#responsible_courier"><code>responsible_courier</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_order</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>cl_id_idx</td><td><code>client_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>courier_idx</td><td><code>responsible_courier_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idOrder_UNIQUE</td><td><code>id_order</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="responsible_courier"> Table: <code>responsible_courier</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица с ответственными курьерами. 
+
+NOT NULL все поля. 
+
+Композитный индекс  на фамилию и имя курьера (нам пришла жалоба на курьера Жукова Василия без указания номера  заказа). фамилия более кардинальная. поэтому она первая в индексе. </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_courier</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td> </td></tr>
+<tr><td><code>first_name</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td> </td><td>Достаточно для имени</td></tr>
+<tr><td><code>last_name</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td> </td><td>Достаточно для фамилии</td></tr>
+<tr><td><code>employee_status</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>Статус сотрудника - уволен, работает, на больничном. Подходит ENUM.</td></tr>
+<tr><td><code>phone</code></td><td>VARCHAR(15)</td><td>NOT NULL</td><td> </td><td>Максимальная длина телефона - "It is an open numbering plan, however, imposing a maximum length of 15 digits to telephone numbers."<br />Предполагается хранение одного номера - рабочего, по которому будет связываться клиент с курьером</td></tr>
+<tr><td><code>first_working_day</code></td><td>DATE</td><td>NOT NULL</td><td> </td><td>Дата выхода сотрудника на работу.</td></tr>
+<tr><td><code>last_working_day</code></td><td>DATE</td><td></td><td> </td><td> </td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_courier</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>last_first_name</td><td><code>last_name</code>, <code>first_name</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idСourier_UNIQUE</td><td><code>id_courier</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="review"> Table: <code>review</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица содержащая рецензии по продуктам от клиентов.
+Индексы не нужны, поиска по рецензиям ни где не реализиован в жизни.
+NOT NULL все поля</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_review</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>Ревью может быть очень много на каждый продукт. Оставляем инт.</td></tr>
+<tr><td><code>client_review_text</code></td><td>VARCHAR(1000)</td><td>NOT NULL</td><td> </td><td>1000 знаков, чтобы влез даже большой обзор от клиента</td></tr>
+<tr><td><code>mark</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>пользователь имеет возможность поставить оценку продукту (Плохо, Хорошо и т.д.). ENUM отлично подойдет для ограниченного списка значений.<br />ENUM("Плохо", 'Удволетворительно' , "Хорошо", "Отлично")<br /></td></tr>
+<tr><td><code>anonymously</code></td><td>TINYINT</td><td>NOT NULL</td><td> </td><td>Пользователь может оставить рецензию анонимно. Выбор (1,0)<br /></td></tr>
+<tr><td><code>date</code></td><td>TIMESTAMP(14)</td><td>NOT NULL</td><td> </td><td>Дата публикации ревью. datetime излишний.<br /></td></tr>
+<tr><td><code>product_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product</code> in table <a href="#product"><code>product</code></a>.</td></tr>
+<tr><td><code>order_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>responsible_courier_id</code> in table <a href="#order"><code>order</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_review</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>prod_idx</td><td><code>product_id</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idReview_UNIQUE</td><td><code>id_review</code></td><td>UNIQUE</td><td> </td></tr>
+<tr><td>order_idx</td><td><code>order_id</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="attribute"> Table: <code>attribute</code></h2>
+
+<h3>Description:</h3>
+
+<p>Список возможных аттрибутов. Показывает какого типа должны быть аттрибуты.  
+
+INDEX по названию аттрибута, так как по нему может осуществляться поиск. 
+
+NOT NULL всё кроме attribute_abbreviation. </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_attribute</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>Атрибутов может быть много. Оставляем INT.</td></tr>
+<tr><td><code>attribute_name</code></td><td>VARCHAR(45)</td><td>NOT NULL</td><td> </td><td>Название атрибута.  Оно может бытть длинным. "Размер в разложенном виде"</td></tr>
+<tr><td><code>attrubute_description</code></td><td>VARCHAR(300)</td><td>NOT NULL</td><td> </td><td>Описание атрибута из которого можно понять, что он означает. "Что такое GPS?"</td></tr>
+<tr><td><code>attribute_type</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>Обобщенный тип атрибута, например если нам нужно вытянуть все текстовые аттрибуты или атрибуты с датами. ENUM("Text", "Number", "Date")</td></tr>
+<tr><td><code>attribute_type_technical</code></td><td>ENUM</td><td>NOT NULL</td><td> </td><td>Технический тип аттрибута. Аттрибут может быть текстом, однако это может быть любой текст , а бывает что этот аттрибут должен попадать в опредеденный лист значений.<br />Аттрибут 'Дополнительно в комплекте', "отличительные фичи" - будут содержать какой-то скорее уникальный текст. (FreeText)<br />Аттрибуты 'Страна', 'Цвет' - должны попадать в определеный лист значений  (List).<br />ENUM("FreeText", "Integer", "Decimal", "Date", "List")</td></tr>
+<tr><td><code>attribute_abbreviation</code></td><td>VARCHAR(30)</td><td></td><td> </td><td>Единица измерения - ГБ, см, метры, диаметр, граммы, килограммы, пиксели, миллионы. Так мы можем хранить числовую информацию о подукте как число. Напрмер, Оперативная память компа - 2 ГБ, 6 ГБ, 8 ГБ, 16 ГБ. Отображать эту информацию как текст когда нужно, а в других ситуациях искать все компы у которых больше 4 ГБ RAM.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_attribute</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>attr_name</td><td><code>attribute_name</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idAttribute_UNIQUE</td><td><code>id_attribute</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="product_types_minimal"> Table: <code>product_types_minimal</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица, содержащая все типы продуктов, но только самый низкий уровень иерархии. 
+
+NOT NULL название типа 
+
+INDEX названия типа, так как по типу продукта может осуществляться поиск посетителями сайта.
+Возможно нет большого смысла, так как таблица не предполагает быть большой. 
+</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_product_types</code></td><td>SMALLINT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>Количество типов для продуктов не превысит 65 535</td></tr>
+<tr><td><code>product_type_name</code></td><td>VARCHAR(80)</td><td>NOT NULL</td><td> </td><td>Название типа продукта 'Мобильные тефоны', 'яблоки'</td></tr>
+<tr><td><code>description</code></td><td>VARCHAR(300)</td><td></td><td> </td><td>Описание категории а-ля "Телефон не только средство связи, но отличный подарок и важный атрибут для модников"</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_product_types</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>type_name</td><td><code>product_type_name</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idProduct_Types_UNIQUE</td><td><code>id_product_types</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="attribute_value"> Table: <code>attribute_value</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица значений аттрибутов конкретного продукта. 
+
+Value может быть NULL, так как заполняется  только один из столбцов value*, ровно из-за этого нет большого смысла в индексации, так как таблица будет содержать большое кол-во NULL в столбцах Value. </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_attribute_value</code></td><td>INT</td><td>PRIMARY, NOT NULL, UNIQUE</td><td> </td><td>Значений атрибутов может быть много. оставляем INT.</td></tr>
+<tr><td><code>value_text</code></td><td>VARCHAR(45)</td><td></td><td> </td><td>значение трибута, например 'красный', 'Англия'</td></tr>
+<tr><td><code>value_number</code></td><td>DECIMAL</td><td></td><td> </td><td>Числовое значение</td></tr>
+<tr><td><code>value_date</code></td><td>DATE</td><td></td><td> </td><td>Дата. Например, дата анонсирования на рынке</td></tr>
+<tr><td><code>id_product_attribute</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product_type_attributes_list</code> in table <a href="#product_type_attributes_list"><code>product_type_attributes_list</code></a>.</td></tr>
+<tr><td><code>id_product</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product</code> in table <a href="#product"><code>product</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_attribute_value</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>Product_idx</td><td><code>id_product</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>type_attibute_idx</td><td><code>id_product_attribute</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>idAttribute_Value_UNIQUE</td><td><code>id_attribute_value</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="product_type_attributes_list"> Table: <code>product_type_attributes_list</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица для связывания многие-ко-многим типа продукта и аттрибута продукта. 
+
+Все поля NOT NULL</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_product_type_attributes_list</code></td><td>INT</td><td>PRIMARY, NOT NULL</td><td> </td><td>Может быть много связок типа 'тип продукта'-'атрибут'</td></tr>
+<tr><td><code>used_in_filter</code></td><td>TINYINT</td><td>NOT NULL</td><td> </td><td>используется ли для фильтрации на сайте</td></tr>
+<tr><td><code>id_product_type</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product_types</code> in table <a href="#product_types_minimal"><code>product_types_minimal</code></a>.</td></tr>
+<tr><td><code>id_attribute</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_attribute</code> in table <a href="#attribute"><code>attribute</code></a>.</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>PRIMARY</td><td><code>id_product_type_attributes_list</code></td><td>PRIMARY</td><td> </td></tr>
+<tr><td>Product__idx</td><td><code>id_product_type</code></td><td>INDEX</td><td> </td></tr>
+<tr><td>Attribute__idx</td><td><code>id_attribute</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="products_in_supply_order"> Table: <code>products_in_supply_order</code></h2>
+
+<h3>Description:</h3>
+
+<p>Из каких продуктов состоял заказ на поставку на какое количество и цену поставщика. 
+Ограничениий нет: цена и количество могут быть отрицательными - возврат товара поставщику. 
+
+Индексы не нужны.
+NOT NULL product_id, supply_id, quantity, supplier_price </p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>product_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product</code> in table <a href="#product"><code>product</code></a>.</td></tr>
+<tr><td><code>supply_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_supply</code> in table <a href="#supply"><code>supply</code></a>.</td></tr>
+<tr><td><code>quantity</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td>Единовременный заказ не будет превышать 16 777 215 шт. достаточно MEDIUMINT UNSIGNED</td></tr>
+<tr><td><code>supplier_price</code></td><td>DECIMAL</td><td>NOT NULL</td><td> </td><td> </td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>Suppl_idx</td><td><code>supply_id</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="attributes_check"> Table: <code>attributes_check</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица, ориентируясь на которую, процедуры  БД будут проверять корректность значений.
+Например, если Страна: розовый или Частота процессора: 1000 гц процедура соберет такие отклонения. 
+замечу, что проверка будет вестись с учетом типа продукта. 
+для овощей Страна : Япония может быть ошибкой, а для наушников верной. 
+
+Все поля могут быть NULL так как их содержание зависит от того какой тип значения проверяется. 
+
+Индекс не нужен, поиска по ним не будет. 
+</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_product_type_attributes_list</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product_type_attributes_list</code> in table <a href="#product_type_attributes_list"><code>product_type_attributes_list</code></a>.</td></tr>
+<tr><td><code>possible_value_text</code></td><td>VARCHAR(100)</td><td></td><td> </td><td> </td></tr>
+<tr><td><code>max_val_dec</code></td><td>DECIMAL</td><td></td><td> </td><td> </td></tr>
+<tr><td><code>min_val_dec</code></td><td>DECIMAL</td><td></td><td> </td><td> </td></tr>
+<tr><td><code>max_date</code></td><td>DATE</td><td></td><td> </td><td> </td></tr>
+<tr><td><code>min_date</code></td><td>DATE</td><td></td><td> </td><td> </td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>Check_idx</td><td><code>id_product_type_attributes_list</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="product_promotion"> Table: <code>product_promotion</code></h2>
+
+<h3>Description:</h3>
+
+<p>Таблица, где хранится вся история промо по выделенному продукту (процент скидки)</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>product_id</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product</code> in table <a href="#product"><code>product</code></a>.</td></tr>
+<tr><td><code>percentage_promo</code></td><td>DECIMAL</td><td>NOT NULL</td><td> </td><td>процент промо</td></tr>
+<tr><td><code>start_date_time</code></td><td>TIMESTAMP(14)</td><td>NOT NULL</td><td> </td><td>дата старта промо</td></tr>
+<tr><td><code>end_date_time</code></td><td>TIMESTAMP(14)</td><td>NOT NULL</td><td> </td><td>дата окончания промо</td></tr>
+<tr><td><code>responsible_employee_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td>сотрудник, который внес промо</td></tr>
+<tr><td><code>comment</code></td><td>VARCHAR(150)</td><td>NOT NULL</td><td><code>'No Comment'</code></td><td>комментарий по промо</td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>product_id_idx</td><td><code>product_id</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="price_change"> Table: <code>price_change</code></h2>
+
+<h3>Description:</h3>
+
+<p>История изменений цены по продукту</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>product_id</code></td><td>MEDIUMINT</td><td>NOT NULL</td><td> </td><td> FK in column <code>id_product</code> in table <a href="#product"><code>product</code></a>.</td></tr>
+<tr><td><code>date_time_change</code></td><td>TIMESTAMP(14)</td><td>NOT NULL</td><td><code>(NOW)</code></td><td> </td></tr>
+<tr><td><code>responsible_employee_id</code></td><td>INT</td><td>NOT NULL</td><td> </td><td> </td></tr>
+<tr><td><code>price_old_value</code></td><td>DECIMAL</td><td>NOT NULL</td><td> </td><td> </td></tr>
+<tr><td><code>price_new_value</code></td><td>DECIMAL</td><td>NOT NULL</td><td> </td><td> </td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>product_id_idx</td><td><code>product_id</code></td><td>INDEX</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+<h2 id="product_types_hierarchy"> Table: <code>product_types_hierarchy</code></h2>
+
+<h3>Description:</h3>
+
+<p>Иерахия продуктовых типов
+содержит все минимальные типы (самый низкий уровень) из таблицы product_types_minimal и более высокие типы. Благодаря этой таблице можно создать иерархию любой вложенности.</p>
+
+<h3>Columns:</h3>
+
+<table><thead><tr class="header"><th align="left">Column</th><th align="left">Data type</th><th align="left">Attribute</th><th align="left">Defualt</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td><code>id_product_types</code></td><td>SMALLINT</td><td>NOT NULL, UNIQUE</td><td> </td><td> FK in column <code>id_product_types_general</code> in table <a href="#product_types_hierarchy"><code>product_types_hierarchy</code></a>.</td></tr>
+<tr><td><code>id_product_types_general</code></td><td>SMALLINT</td><td></td><td> </td><td> </td></tr>
+<tr><td><code>product_type_general_name</code></td><td>VARCHAR(80)</td><td></td><td> </td><td> </td></tr>
+</tbody></table>
+
+<h3>Indexes:</h3>
+
+<table><thead><tr class="header"><th align="left">Name</th><th align="left">Columns</th><th align="left">Data type</th><th align="left">Description</th></tr></thead><tbody>
+
+<tr><td>id_product_types_UNIQUE</td><td><code>id_product_types</code></td><td>UNIQUE</td><td> </td></tr>
+</tbody></table><a href="#d1_doc_gen_contents">To contents</a>
+
+</body></html>
